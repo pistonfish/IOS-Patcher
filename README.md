@@ -5,7 +5,7 @@
 
 This patcher patches the RSA Key and applies mail patches in IOS31 for Wii/vWii and IOS80 just for Wii so you can use RiiConnect24 without errors prohibiting you.
 
-**Mod by pistonfish lets you patch IOS 60 and 70 which adds (unofficial) support for 4.0/4.1/4.2
+**Mod by pistonfish lets you patch IOS 60 and 70 which adds (unofficial) support for 4.0/4.1/4.2<br>
 4.0/4.1/4.2-Patch is untested and can lead to a STUB-brick. Make sure you have BootMii@boot2 and a NAND-backup before testing this version**
 
 The macOS/Linux version of the patcher uses a version of Sharpii available at https://github.com/spotlightishere/sharpii
