@@ -2,7 +2,7 @@
 :: ===========================================================================
 :: IOS Patcher for Windows
 set version=1.8.6
-:: AUTHORS: KcrPL, Larsenv
+:: AUTHORS: KcrPL, Larsenv, pistonfish
 :: ***************************************************************************
 :: Copyright (c) 2017 RiiConnect24, and it's (Lead) Developers
 :: ===========================================================================
@@ -21,9 +21,9 @@ set patchingok=1
 set s=NUL
 
 :: Window Title
-title IOS Patcher for RiiConnect24 v.%version%  Created by @Larsenv, @KcrPL
-set last_build=2017/10/31
-set at=01:45AM
+title IOS Patcher for RiiConnect24 v.%version%  Created by @Larsenv, @KcrPL, edited by @pistonfish
+set last_build=2017/11/07
+set at=12:40PM
 if exist "C:\Users\%username%\Desktop\IOSPatcherDebug.txt" goto debug_load
 :: ### Auto Update ###
 :: 1=Enable 0=Disable
@@ -33,7 +33,7 @@ if exist "C:\Users\%username%\Desktop\IOSPatcherDebug.txt" goto debug_load
 :: MainFolder/TempStorage - folder that is used to keep version.txt and whatsnew.txt. These two files are deleted every startup but if offlinestorage will be set 1, they won't be deleted.
 set /a IOSPatcher_Update_Activate=1
 set /a offlinestorage=0
-set FilesHostedOn=https://raw.githubusercontent.com/KcrPL/KcrPL.github.io/master/Patchers_Auto_Update/IOS_Patcher
+set FilesHostedOn=https://raw.githubusercontent.com/pistonfish/IOS-Patcher/master/Windows
 set MainFolder=%appdata%\IOSPatcher
 set TempStorage=%appdata%\IOSPatcher\internet\temp
 
@@ -323,7 +323,7 @@ echo                                   -odhhhhyddmmmmmNNmhs/:`
 echo                                     :syhdyyyyso+/-`
 echo                                                                        Please wait...
 :: Important check for files. We need them to patch IOS's
-if not exist 00000006-80.delta goto error_runtime_error
+if not exist 00000006-sys.delta goto error_runtime_error
 if not exist 00000006-31.delta goto error_runtime_error
 if not exist libWiiSharp.dll goto error_runtime_error
 if not exist Sharpii.exe goto error_runtime_error
@@ -416,7 +416,7 @@ echo                                     :syhdyyyyso+/-`
 echo INFO: Begining update process>>%MainFolder%/IOSPatcherLogs.txt
 :: Deleting the temp files if they exist.
 if exist 00000006-31.delta` del 00000006-31.delta` /q 2> nul
-if exist 00000006-80.delta` del 00000006-80.delta` /q 2> nul
+if exist 00000006-sys.delta` del 00000006-80.delta` /q 2> nul
 if exist WadInstaller.dll` del WadInstaller.dll` /q 2> nul
 if exist wget.exe` del wget.exe` /q 2> nul
 if exist xdelta3.exe` del xdelta3.exe` 2> nul
@@ -436,7 +436,7 @@ powershell -command "(new-object System.Net.WebClient).DownloadFile('%FilesHoste
 
 :: If download failed
 if %update%==1 if not exist 00000006-31.delta` goto error_update_not_available
-if %update%==1 if not exist 00000006-80.delta` goto error_update_not_available
+if %update%==1 if not exist 00000006-sys.delta` goto error_update_not_available
 if %update%==1 if not exist WadInstaller.dll` goto error_update_not_available
 if %update%==1 if not exist wget.exe` goto error_update_not_available
 if %update%==1 if not exist xdelta3.exe` goto error_update_not_available
@@ -446,7 +446,7 @@ if %update%==1 if not exist libWiiSharp.dll` goto error_update_not_available
 
 :: Delete the original files
 if %update%==1 if exist 00000006-31.delta del 00000006-31.delta /q
-if %update%==1 if exist 00000006-80.delta del 00000006-80.delta /q
+if %update%==1 if exist 00000006-sys.delta del 00000006-sys.delta /q
 if %update%==1 if exist WadInstaller.dll del WadInstaller.dll /q
 if %update%==1 if exist wget.exe del wget.exe /q
 if %update%==1 if exist xdelta3.exe del xdelta3.exe /q
@@ -455,7 +455,7 @@ if %update%==1 if exist libWiiSharp.dll del libWiiSharp.dll /q
 
 :: Renaming the temp files to original names
 ren 00000006-31.delta` 00000006-31.delta
-ren 00000006-80.delta` 00000006-80.delta
+ren 00000006-sys.delta` 00000006-sys.delta
 ren WadInstaller.dll` WadInstaller.dll
 ren wget.exe` wget.exe
 ren xdelta3.exe` xdelta3.exe
@@ -650,7 +650,7 @@ pause>NUL
 goto begin_main
 :begin
 cls
-if not exist 00000006-80.delta set /a delta80=2
+if not exist 00000006-sys.delta set /a delta80=2
 if not exist 00000006-31.delta set /a delta31=2
 if not exist libWiiSharp.dll goto error_runtime_error
 if not exist Sharpii.exe goto error_runtime_error
@@ -702,7 +702,7 @@ goto debug_1
 :debug_runtime
 set /a tempvariable=0
 if not exist 00000006-31.delta set /a tempvariable=1
-if not exist 00000006-80.delta set /a tempvariable=1
+if not exist 00000006-sys.delta set /a tempvariable=1
 if not exist libWiiSharp.dll set /a tempvariable=1
 if not exist Sharpii.exe set /a tempvariable=1
 if not exist WadInstaller.dll set /a tempvariable=1
@@ -742,11 +742,17 @@ echo ---------------------------------------------------------------------------
 echo  [*] Deleting files.
 echo.
 del /q IOS31-old.wad >NUL
+del /q IOS60-old.wad >NUL
+del /q IOS70-old.wad >NUL
 del /q IOS80-old.wad >NUL
-del /q IOS31\00000006.app >NUL
-rmdir /q /s IOS31 >NUL
-rmdir /q /s IOS80 >NUL
 del /q 00000006.app >NUL
+rmdir /q /s IOS31 >NUL
+rmdir /q /s IOS60 >NUL
+rmdir /q /s IOS70 >NUL
+rmdir /q /s IOS80 >NUL
+del /q IOS31\00000006.app >NUL
+del /q IOS60\00000006.app >NUL
+del /q IOS70\00000006.app >NUL
 del /q IOS80\00000006.app >NUL
 
 set output=OK!
@@ -766,12 +772,16 @@ goto debug_1
 cls
 echo Downloading IOS 31...
 Sharpii.exe NUSD -ios 31 -v latest -o IOS31-old.wad -wad >NUL
+echo Downloading IOS 60...
+Sharpii.exe NUSD -ios 60 -v 6174 -o IOS80-old.wad -wad >NUL
+echo Downloading IOS 70...
+Sharpii.exe NUSD -ios 70 -v 6687 -o IOS80-old.wad -wad >NUL
 echo Downloading IOS 80...
 Sharpii.exe NUSD -ios 80 -v latest -o IOS80-old.wad -wad >NUL
 set output=Downloading successfull.
 goto debug_download1
 :debug_download1
-echo Do you want to patch IOS 31 and 80 for RiiConnect?
+echo Do you want to patch IOS 31, 60, 70 and 80 for RiiConnect?
 echo 1. Yes
 echo 2. No
 set /p s=Choose:
@@ -780,22 +790,36 @@ if %s%==2 goto debug_1
 goto debug_download_1
 :debug_download_patch
 Sharpii.exe WAD -u IOS31-old.wad IOS31/ >NUL
+Sharpii.exe WAD -u IOS80-old.wad IOS60/ >NUL
+Sharpii.exe WAD -u IOS80-old.wad IOS70/ >NUL
 Sharpii.exe WAD -u IOS80-old.wad IOS80/ >NUL
 move IOS31\00000006.app 00000006.app >NUL
 xdelta3.exe -f -d -s 00000006.app 00000006-31.delta IOS31\00000006.app >NUL
+move IOS60\00000006.app 00000006.app >NUL
+xdelta3.exe -f -d -s 00000006.app 00000006-sys.delta IOS60\00000006.app >NUL
+move IOS70\00000006.app 00000006.app >NUL
+xdelta3.exe -f -d -s 00000006.app 00000006-sys.delta IOS70\00000006.app >NUL
 move IOS80\00000006.app 00000006.app >NUL
-xdelta3.exe -f -d -s 00000006.app 00000006-80.delta IOS80\00000006.app >NUL
+xdelta3.exe -f -d -s 00000006.app 00000006-sys.delta IOS80\00000006.app >NUL
 mkdir WAD
 Sharpii.exe WAD -p IOS31\ WAD\IOS31.wad -fs >NUL
+Sharpii.exe WAD -p IOS60\ WAD\IOS80.wad -fs >NUL
+Sharpii.exe WAD -p IOS70\ WAD\IOS80.wad -fs >NUL
 Sharpii.exe WAD -p IOS80\ WAD\IOS80.wad -fs >NUL
 del 00000006.app /q >NUL
 del IOS31-old.wad /q >NUL
+del IOS60-old.wad /q >NUL
+del IOS70-old.wad /q >NUL
 del IOS80-old.wad /q >NUL
 rmdir /s /q IOS31 >NUL
+rmdir /s /q IOS60 >NUL
+rmdir /s /q IOS70 >NUL
 rmdir /s /q IOS80 >NUL
 Sharpii.exe IOS WAD\IOS31.wad -fs -es -np -vp
+Sharpii.exe IOS WAD\IOS60.wad -fs -es -np -vp
+Sharpii.exe IOS WAD\IOS70.wad -fs -es -np -vp
 Sharpii.exe IOS WAD\IOS80.wad -fs -es -np -vp
-set output=Patching and downloading IOS 31, 80 done.
+set output=Patching and downloading IOS 31, 60, 70, 80 done.
 goto debug_1
 
 
@@ -922,7 +946,7 @@ echo RiiConnect24 IOS Patcher - (C) Larsenv, (C) KcrPL. v%version%. (Compiled on
 echo ---------------------------------------------------------------------------------------------------------------------------
 echo  [*] Info.
 echo.
-echo We need to download IOS 31 and 80.
+echo We need to download IOS 31, 60, 70 and 80.
 echo Click any button to proceed to download.
 echo.
 pause>NUL
@@ -955,10 +979,40 @@ echo ---------------------------------------------------------------------------
 echo  [*] Downloading
 echo.
 echo :--        : 20%%
+call Sharpii.exe NUSD -ios 60 -v 6174 -o IOS60-old.wad -wad >NUL
+set /a temperrorlev=%errorlevel%
+set modul=Sharpii.exe
+if not %temperrorlev%==0 goto error_patching
+
+
+cls
+echo.
+echo RiiConnect24 IOS Patcher - (C) Larsenv, (C) KcrPL. v%version%. (Compiled on %last_build% at %at%)
+echo ---------------------------------------------------------------------------------------------------------------------------
+echo  [*] Downloading
+echo.
+echo :--        : 20%%
+rem ### Patching ###
+call Sharpii.exe NUSD -ios 70 -v 6687 -o IOS70-old.wad -wad >NUL
+set /a temperrorlev=%errorlevel%
+set modul=Sharpii.exe
+if not %temperrorlev%==0 goto error_patching
+
+
+cls
+echo.
+echo RiiConnect24 IOS Patcher - (C) Larsenv, (C) KcrPL. v%version%. (Compiled on %last_build% at %at%)
+echo ---------------------------------------------------------------------------------------------------------------------------
+echo  [*] Downloading
+echo.
+echo :--        : 20%%
+rem ### Patching ###
 call Sharpii.exe NUSD -ios 80 -v latest -o IOS80-old.wad -wad >NUL
 set /a temperrorlev=%errorlevel%
 set modul=Sharpii.exe
 if not %temperrorlev%==0 goto error_patching
+
+
 cls
 echo.
 echo RiiConnect24 IOS Patcher - (C) Larsenv, (C) KcrPL. v%version%. (Compiled on %last_build% at %at%)
@@ -967,6 +1021,16 @@ echo  [*] Downloading
 echo.
 echo :----      : 40%%
 call Sharpii.exe WAD -u IOS31-old.wad IOS31/ >NUL
+set /a temperrorlev=%errorlevel%
+set modul=Sharpii.exe
+if not %temperrorlev%==0 goto error_patching
+
+call Sharpii.exe WAD -u IOS60-old.wad IOS60/ >NUL
+set /a temperrorlev=%errorlevel%
+set modul=Sharpii.exe
+if not %temperrorlev%==0 goto error_patching
+
+call Sharpii.exe WAD -u IOS70-old.wad IOS70/ >NUL
 set /a temperrorlev=%errorlevel%
 set modul=Sharpii.exe
 if not %temperrorlev%==0 goto error_patching
@@ -993,7 +1057,17 @@ set /a temperrorlev=%errorlevel%
 set modul=xdelta.exe
 if not %temperrorlev%==0 goto error_patching
 
-move IOS80\00000006.app 00000006.app >NUL
+move IOS60\00000006.app 00000006-60.app >NUL
+set /a temperrorlev=%errorlevel%
+set modul=move.exe
+if not %temperrorlev%==0 goto error_patching
+
+move IOS70\00000006.app 00000006-70.app >NUL
+set /a temperrorlev=%errorlevel%
+set modul=move.exe
+if not %temperrorlev%==0 goto error_patching
+
+move IOS80\00000006.app 00000006-80.app >NUL
 set /a temperrorlev=%errorlevel%
 set modul=move.exe
 if not %temperrorlev%==0 goto error_patching
@@ -1006,7 +1080,17 @@ echo  [*] Downloading
 echo.
 echo :-------   : 70%%
 
-call xdelta3.exe -f -d -s 00000006.app 00000006-80.delta IOS80\00000006.app >NUL
+call xdelta3.exe -f -d -s 00000006-60.app 00000006-sys.delta IOS60\00000006.app >NUL
+set /a temperrorlev=%errorlevel%
+set modul=xdelta3.exe
+if not %temperrorlev%==0 goto error_patching
+
+call xdelta3.exe -f -d -s 00000006-70.app 00000006-sys.delta IOS70\00000006.app >NUL
+set /a temperrorlev=%errorlevel%
+set modul=xdelta3.exe
+if not %temperrorlev%==0 goto error_patching
+
+call xdelta3.exe -f -d -s 00000006-80.app 00000006-sys.delta IOS80\00000006.app >NUL
 set /a temperrorlev=%errorlevel%
 set modul=xdelta3.exe
 if not %temperrorlev%==0 goto error_patching
@@ -1028,6 +1112,16 @@ set /a temperrorlev=%errorlevel%
 set modul=Sharpii.exe
 if not %temperrorlev%==0 goto error_patching
 
+call Sharpii.exe WAD -p IOS60\ WAD\IOS60.wad -fs >NUL
+set /a temperrorlev=%errorlevel%
+set modul=Sharpii.exe
+if not %temperrorlev%==0 goto error_patching
+
+call Sharpii.exe WAD -p IOS70\ WAD\IOS70.wad -fs >NUL
+set /a temperrorlev=%errorlevel%
+set modul=Sharpii.exe
+if not %temperrorlev%==0 goto error_patching
+
 call Sharpii.exe WAD -p IOS80\ WAD\IOS80.wad -fs >NUL
 set /a temperrorlev=%errorlevel%
 set modul=Sharpii.exe
@@ -1039,11 +1133,27 @@ echo ---------------------------------------------------------------------------
 echo  [*] Downloading
 echo.
 echo :--------- : 90%%
-del 00000006.app /q >NUL
+del 00000006-60.app /q >NUL
+set /a temperrorlev=%errorlevel%
+set modul=del.exe
+if not %temperrorlev%==0 goto error_patching
+del 00000006-70.app /q >NUL
+set /a temperrorlev=%errorlevel%
+set modul=del.exe
+if not %temperrorlev%==0 goto error_patching
+del 00000006-80.app /q >NUL
 set /a temperrorlev=%errorlevel%
 set modul=del.exe
 if not %temperrorlev%==0 goto error_patching
 del IOS31-old.wad /q >NUL
+set /a temperrorlev=%errorlevel%
+set modul=del.exe
+if not %temperrorlev%==0 goto error_patching
+del IOS60-old.wad /q >NUL
+set /a temperrorlev=%errorlevel%
+set modul=del.exe
+if not %temperrorlev%==0 goto error_patching
+del IOS70-old.wad /q >NUL
 set /a temperrorlev=%errorlevel%
 set modul=del.exe
 if not %temperrorlev%==0 goto error_patching
@@ -1059,6 +1169,16 @@ echo  [*] Downloading
 echo.
 echo :--------- : 93%%
 rmdir /s /q IOS31 >NUL
+set /a temperrorlev=%errorlevel%
+set modul=rmdir.exe
+if not %temperrorlev%==0 goto error_patching
+
+rmdir /s /q IOS60 >NUL
+set /a temperrorlev=%errorlevel%
+set modul=rmdir.exe
+if not %temperrorlev%==0 goto error_patching
+
+rmdir /s /q IOS70 >NUL
 set /a temperrorlev=%errorlevel%
 set modul=rmdir.exe
 if not %temperrorlev%==0 goto error_patching
@@ -1080,6 +1200,14 @@ echo ---------------------------------------------------------------------------
 echo  [*] Downloading
 echo.
 echo :----------: 100%%
+call Sharpii.exe IOS WAD\IOS60.wad -fs -es -np -vp
+set /a temperrorlev=%errorlevel%
+set modul=Sharpii.exe
+if not %temperrorlev%==0 goto error_patching
+call Sharpii.exe IOS WAD\IOS70.wad -fs -es -np -vp
+set /a temperrorlev=%errorlevel%
+set modul=Sharpii.exe
+if not %temperrorlev%==0 goto error_patching
 call Sharpii.exe IOS WAD\IOS80.wad -fs -es -np -vp
 set /a temperrorlev=%errorlevel%
 set modul=Sharpii.exe
